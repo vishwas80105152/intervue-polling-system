@@ -206,8 +206,9 @@
 }
 
 .completed-status {
-  background: #fff3cd;
-  color: #856404;
+  background: white;
+  color: #373737;
+  border: 2px solid #E5E5E5;
 }
 
 .status-icon {
@@ -216,7 +217,7 @@
 
 .status-text {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* Responsive Design */
