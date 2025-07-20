@@ -1,0 +1,263 @@
+.student-poll-view {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Poll Header */
+.poll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.question-number {
+  font-size: 20px;
+  font-weight: 600;
+  color: #373737;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.timer-icon {
+  font-size: 16px;
+}
+
+.timer-text {
+  font-size: 16px;
+}
+
+/* Question Display */
+.question-display {
+  background: #373737;
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Options Container */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.option-card {
+  background: white;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-card:hover:not(.selected) {
+  border-color: #7765DA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(119, 101, 218, 0.15);
+}
+
+.option-card.selected {
+  border-color: #4F0DCE;
+  background: linear-gradient(135deg, rgba(79, 13, 206, 0.05) 0%, rgba(87, 103, 208, 0.05) 100%);
+}
+
+.option-card.highest {
+  border-color: #4F0DCE;
+}
+
+.option-card.correct {
+  border-color: #28a745;
+}
+
+.option-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.option-number {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.option-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #373737;
+  flex: 1;
+}
+
+.correct-badge {
+  background: #28a745;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Result Bar */
+.result-bar-container {
+  position: relative;
+  height: 32px;
+  background: #F8F9FA;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.result-bar {
+  height: 100%;
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  border-radius: 8px;
+  transition: width 0.5s ease;
+}
+
+.percentage-text {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: #373737;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  background: #E5E5E5;
+  color: #6E6E6E;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn.active {
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 13, 206, 0.3);
+}
+
+.submit-btn.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 13, 206, 0.4);
+}
+
+.submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Status Messages */
+.answered-status,
+.completed-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.answered-status {
+  background: #d4edda;
+  color: #155724;
+}
+
+.completed-status {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-icon {
+  font-size: 16px;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .poll-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .question-display {
+    padding: 16px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+
+  .option-card {
+    padding: 12px;
+  }
+
+  .option-header {
+    gap: 8px;
+  }
+
+  .option-number {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .option-text {
+    font-size: 14px;
+  }
+
+  .result-bar-container {
+    height: 28px;
+  }
+
+  .percentage-text {
+    font-size: 11px;
+  }
+} 

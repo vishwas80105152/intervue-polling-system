@@ -1,0 +1,140 @@
+.student-setup {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.setup-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Branding */
+.branding {
+  margin-bottom: 30px;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.brand-icon {
+  font-size: 16px;
+}
+
+.brand-text {
+  font-weight: 600;
+}
+
+/* Main Title */
+.main-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #373737;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+/* Instructions */
+.instructions {
+  font-size: 16px;
+  color: #6E6E6E;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.instructions strong {
+  color: #373737;
+  font-weight: 600;
+}
+
+/* Name Form */
+.name-form {
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #373737;
+  margin-bottom: 12px;
+}
+
+.name-input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  font-size: 16px;
+  background: #F8F9FA;
+  color: #373737;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: #7765DA;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(119, 101, 218, 0.1);
+}
+
+.name-input::placeholder {
+  color: #6E6E6E;
+}
+
+/* Continue Button */
+.continue-btn {
+  width: 100%;
+  background: #E5E5E5;
+  color: #6E6E6E;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.continue-btn.active {
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 13, 206, 0.3);
+}
+
+.continue-btn.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 13, 206, 0.4);
+}
+
+.continue-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .setup-container {
+    padding: 30px 20px;
+  }
+
+  .main-title {
+    font-size: 24px;
+  }
+
+  .name-input {
+    padding: 14px;
+  }
+} 

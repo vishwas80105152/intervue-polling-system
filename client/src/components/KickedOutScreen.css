@@ -1,0 +1,87 @@
+.kicked-out-screen {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.kicked-out-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Branding */
+.branding {
+  margin-bottom: 30px;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.brand-icon {
+  font-size: 16px;
+}
+
+.brand-text {
+  font-weight: 600;
+}
+
+/* Main Title */
+.main-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #373737;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+/* Explanation */
+.explanation {
+  font-size: 16px;
+  color: #6E6E6E;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* Retry Button */
+.retry-btn {
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 13, 206, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .kicked-out-container {
+    padding: 30px 20px;
+  }
+
+  .main-title {
+    font-size: 24px;
+  }
+
+  .explanation {
+    font-size: 14px;
+  }
+} 
