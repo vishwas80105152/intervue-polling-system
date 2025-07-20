@@ -61,4 +61,7 @@ jspm_packages/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# Poll history data
+server/poll_history.json 
