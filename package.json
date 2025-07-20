@@ -9,12 +9,17 @@
     "server": "cd server && npm start",
     "client": "cd client && npm start",
     "build": "cd client && npm run build",
-    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "postinstall": "cd client && npm install && cd ../server && npm install"
   },
   "keywords": ["polling", "education", "real-time", "socket.io"],
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
     "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 } 
