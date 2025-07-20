@@ -9,13 +9,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*",
+    origin: process.env.CLIENT_URL || "*",
     methods: ["GET", "POST"]
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || "*",
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
@@ -25,6 +28,38 @@ let participants = new Map(); // socketId -> { name, role, tabId }
 let pollHistory = [];
 let chatMessages = [];
 let questionCounter = 0;
+
+// Helper function to check if all students have answered
+const haveAllStudentsAnswered = () => {
+  if (!activePoll || activePoll.status !== 'active') return false;
+  const students = Array.from(participants.values()).filter(p => p.role === 'student');
+  // Only count answers from currently connected students
+  const connectedStudentAnswers = Array.from(activePoll.answers.keys()).filter(socketId => 
+    participants.has(socketId) && participants.get(socketId).role === 'student'
+  );
+  return connectedStudentAnswers.length >= students.length;
+};
+
+// Helper function to get poll statistics
+const getPollStats = () => {
+  if (!activePoll) return { totalStudents: 0, answeredStudents: 0, studentNames: [] };
+  
+  const students = Array.from(participants.values()).filter(p => p.role === 'student');
+  const connectedStudentAnswers = Array.from(activePoll.answers.keys()).filter(socketId => 
+    participants.has(socketId) && participants.get(socketId).role === 'student'
+  );
+  
+  const studentNames = connectedStudentAnswers.map(socketId => {
+    const participant = participants.get(socketId);
+    return participant ? participant.name : 'Unknown';
+  });
+  
+  return {
+    totalStudents: students.length,
+    answeredStudents: connectedStudentAnswers.length,
+    studentNames
+  };
+};
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
@@ -73,9 +108,10 @@ io.on('connection', (socket) => {
   socket.on('create-poll', (pollData) => {
     const participant = participants.get(socket.id);
     if (participant && participant.role === 'teacher') {
-      // Check if there's already an active poll
-      if (activePoll && activePoll.status === 'active') {
-        socket.emit('error', 'There is already an active poll. Please wait for it to complete.');
+      // Check if there's already an active poll and not all students have answered
+      if (activePoll && activePoll.status === 'active' && !haveAllStudentsAnswered()) {
+        const pollStats = getPollStats();
+        socket.emit('error', `Cannot create new poll. ${pollStats.answeredStudents}/${pollStats.totalStudents} students have answered. Please wait for all students to answer or the time to run out.`);
         return;
       }
 
@@ -105,13 +141,19 @@ io.on('connection', (socket) => {
       setTimeout(() => {
         if (activePoll && activePoll.status === 'active') {
           activePoll.status = 'completed';
-          io.to('polling-room').emit('poll-ended', activePoll);
+          const pollStats = getPollStats();
+          const pollWithStats = {
+            ...activePoll,
+            pollStats
+          };
+          io.to('polling-room').emit('poll-ended', pollWithStats);
           
           // Save to history
           pollHistory.push({
             ...activePoll,
             answers: Array.from(activePoll.answers.entries()),
-            participants: Array.from(participants.values())
+            participants: Array.from(participants.values()),
+            pollStats
           });
         }
       }, activePoll.maxTime * 1000);
@@ -140,16 +182,21 @@ io.on('connection', (socket) => {
       });
 
       // Check if all students have answered
-      const students = Array.from(participants.values()).filter(p => p.role === 'student');
-      if (activePoll.answers.size >= students.length) {
+      if (haveAllStudentsAnswered()) {
         activePoll.status = 'completed';
-        io.to('polling-room').emit('poll-ended', activePoll);
+        const pollStats = getPollStats();
+        const pollWithStats = {
+          ...activePoll,
+          pollStats
+        };
+        io.to('polling-room').emit('poll-ended', pollWithStats);
         
         // Save to history
         pollHistory.push({
           ...activePoll,
           answers: Array.from(activePoll.answers.entries()),
-          participants: Array.from(participants.values())
+          participants: Array.from(participants.values()),
+          pollStats
         });
       }
     }
@@ -211,6 +258,26 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Handle checking if teacher can create new poll
+  socket.on('check-can-create-poll', () => {
+    const participant = participants.get(socket.id);
+    if (participant && participant.role === 'teacher') {
+      const canCreate = !activePoll || activePoll.status === 'completed' || haveAllStudentsAnswered();
+      const pollStats = getPollStats();
+      const pollStatus = {
+        canCreate,
+        activePoll: activePoll ? {
+          ...activePoll,
+          answers: Array.from(activePoll.answers.entries())
+        } : null,
+        totalStudents: pollStats.totalStudents,
+        answeredStudents: pollStats.answeredStudents,
+        studentNames: pollStats.studentNames
+      };
+      socket.emit('poll-status-update', pollStatus);
+    }
+  });
+
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
@@ -240,7 +307,8 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 5001;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
   console.log(`Socket.IO server ready for connections`);
+  console.log(`Client URL: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
 }); 

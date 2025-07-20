@@ -1,11 +1,13 @@
 .teacher-dashboard {
-  width: 100%;
-  max-width: 1200px;
+  width: 80%;
+  max-width: 1400px;
   min-height: 100vh;
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin: 0 auto;
+  align-self: center;
 }
 
 /* Dashboard Header */
@@ -77,11 +79,12 @@
   flex: 1;
   padding: 30px;
   background: white;
+  width: 100%;
 }
 
 /* Active Poll Section */
 .active-poll-section {
-  max-width: 800px;
+  width: 100%;
 }
 
 .poll-header {
@@ -225,6 +228,10 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .teacher-dashboard {
+    width: 90%;
+  }
+  
   .dashboard-content {
     flex-direction: column;
   }
@@ -238,6 +245,7 @@
 
 @media (max-width: 768px) {
   .teacher-dashboard {
+    width: 95%;
     border-radius: 0;
     min-height: 100vh;
   }

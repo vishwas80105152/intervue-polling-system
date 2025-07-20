@@ -3,6 +3,7 @@ import StudentPollView from './StudentPollView';
 import StudentWaitingView from './StudentWaitingView';
 import ChatPanel from './ChatPanel';
 import ParticipantsPanel from './ParticipantsPanel';
+import PollHistory from './PollHistory';
 import './StudentDashboard.css';
 
 const StudentDashboard = ({ 
@@ -11,13 +12,16 @@ const StudentDashboard = ({
   participants, 
   chatMessages, 
   userName,
-  onSendMessage 
+  onSendMessage,
+  onChangeName,
+  pollHistory 
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [showChat, setShowChat] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Timer for active poll
   useEffect(() => {
@@ -81,6 +85,23 @@ const StudentDashboard = ({
         
         <div className="user-info">
           <span className="user-name">Welcome, {userName}!</span>
+          <button 
+            className="change-name-btn"
+            onClick={onChangeName}
+            title="Change your name"
+          >
+            ✏️
+          </button>
+        </div>
+        
+        <div className="header-actions">
+          <button 
+            className="history-btn"
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            <span className="btn-icon">👁️</span>
+            View Poll History
+          </button>
         </div>
       </div>
 
@@ -148,6 +169,16 @@ const StudentDashboard = ({
       >
         <span className="chat-icon">💬</span>
       </button>
+
+      {/* Full Page Poll History */}
+      {showHistory && (
+        <div className="full-page-overlay">
+          <PollHistory 
+            history={pollHistory}
+            onClose={() => setShowHistory(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };

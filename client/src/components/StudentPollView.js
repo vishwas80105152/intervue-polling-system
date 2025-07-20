@@ -72,7 +72,7 @@ const StudentPollView = ({
                       backgroundColor: isHighest ? '#4F0DCE' : '#7765DA'
                     }}
                   ></div>
-                  <span className="percentage-text">{percentage}%</span>
+                  <span className="percentage-text">{percentage}% ({votes} votes)</span>
                 </div>
               )}
             </div>
@@ -100,8 +100,30 @@ const StudentPollView = ({
 
       {poll.status === 'completed' && (
         <div className="completed-status">
-          <span className="status-icon">🏁</span>
-          <span className="status-text">Poll completed! Wait for the teacher to ask a new question..</span>
+          <span className="status-text">Wait for the teacher to ask a new question.</span>
+          
+          {/* Show participation summary */}
+          {poll.pollStats && (
+            <div className="participation-summary">
+              <p className="summary-text">
+                Total participation: {poll.pollStats.answeredStudents} out of {poll.pollStats.totalStudents} students
+              </p>
+            </div>
+          )}
+          
+          {/* Show student participants if available */}
+          {poll.pollStats && poll.pollStats.studentNames && poll.pollStats.studentNames.length > 0 && (
+            <div className="student-participants">
+              <p className="participants-label">Students who participated:</p>
+              <div className="student-names">
+                {poll.pollStats.studentNames.map((name, index) => (
+                  <span key={index} className="student-name-badge">
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

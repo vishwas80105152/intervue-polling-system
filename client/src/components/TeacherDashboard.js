@@ -19,6 +19,7 @@ const TeacherDashboard = ({
   const [showParticipants, setShowParticipants] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [pollStatus, setPollStatus] = useState(null);
 
   // Timer for active poll
   useEffect(() => {
@@ -48,7 +49,29 @@ const TeacherDashboard = ({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const canCreatePoll = !activePoll || activePoll.status === 'completed';
+  // Check poll status when activePoll or participants change
+  useEffect(() => {
+    if (socket) {
+      socket.emit('check-can-create-poll');
+    }
+  }, [activePoll, participants, socket]);
+
+  // Listen for poll status updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handlePollStatusUpdate = (status) => {
+      setPollStatus(status);
+    };
+
+    socket.on('poll-status-update', handlePollStatusUpdate);
+
+    return () => {
+      socket.off('poll-status-update', handlePollStatusUpdate);
+    };
+  }, [socket]);
+
+  const canCreatePoll = pollStatus ? pollStatus.canCreate : (!activePoll || activePoll.status === 'completed');
 
   return (
     <div className="teacher-dashboard">
@@ -75,6 +98,7 @@ const TeacherDashboard = ({
             <PollCreator 
               socket={socket} 
               canCreate={canCreatePoll}
+              pollStatus={pollStatus}
             />
           )}
 

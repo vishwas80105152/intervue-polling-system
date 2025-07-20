@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './StudentSetup.css';
 
-const StudentSetup = ({ onSubmit }) => {
+const StudentSetup = ({ onSubmit, isReturning = false }) => {
   const [name, setName] = useState('');
 
   const handleSubmit = (e) => {
@@ -29,7 +29,15 @@ const StudentSetup = ({ onSubmit }) => {
 
         {/* Instructions */}
         <p className="instructions">
-          If you're a student, you'll be able to <strong>submit your answers</strong>, participate in live polls, and see how your responses compare with your classmates.
+          {isReturning ? (
+            <>
+              Welcome back! You can change your name or continue with your previous name.
+            </>
+          ) : (
+            <>
+              If you're a student, you'll be able to <strong>submit your answers</strong>, participate in live polls, and see how your responses compare with your classmates.
+            </>
+          )}
         </p>
 
         {/* Name Input Form */}

@@ -1,116 +1,172 @@
-# Intervue Live Polling System
+# Intervue - Live Polling System
 
-A real-time live polling system built with React, Express.js, and Socket.IO. This application allows teachers to create polls and students to participate in real-time voting sessions.
+A real-time polling application for teachers and students built with React, Node.js, and Socket.IO.
 
 ## Features
 
 ### Teacher Features
 - ✅ Create new polls with multiple choice questions
-- ✅ Configure time limits for polls (30s, 60s, 90s, 120s)
 - ✅ View live polling results in real-time
-- ✅ Kick out students from the session
-- ✅ View poll history (brownie points feature)
-- ✅ Chat with students in real-time
+- ✅ Configure maximum time for polls (default 60 seconds)
+- ✅ Kick students out of the session
+- ✅ View poll history
+- ✅ Chat with students
 
 ### Student Features
-- ✅ Enter name on first visit (unique per tab)
+- ✅ Enter name once per browser tab (persisted on refresh)
 - ✅ Submit answers to active polls
 - ✅ View live polling results after answering
-- ✅ 60-second maximum time limit per question
+- ✅ 60-second time limit per question
+- ✅ View poll history
 - ✅ Chat with teachers and other students
-- ✅ View participant list
 
-### Technical Features
-- ✅ Real-time communication using Socket.IO
-- ✅ Responsive design for mobile and desktop
-- ✅ Modern UI with gradient designs
-- ✅ Tab-based unique identification
-- ✅ Error handling and user feedback
+## Technologies Used
 
-## Tech Stack
+- **Frontend**: React.js, Socket.IO Client
+- **Backend**: Node.js, Express.js, Socket.IO
+- **Real-time Communication**: Socket.IO
+- **Styling**: CSS3 with modern design
 
-- **Frontend**: React.js, CSS3
-- **Backend**: Node.js, Express.js
-- **Real-time**: Socket.IO
-- **Styling**: Custom CSS with gradients and animations
-
-## Installation & Setup
+## Local Development
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+- Node.js (v16 or higher)
+- npm (v8 or higher)
 
-### Quick Start
+### Installation
 
-1. **Clone the repository**
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd intervue
+```
+
+2. Install dependencies:
+```bash
+npm run install-all
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:3000`
+
+## Deployment
+
+### Option 1: Vercel (Frontend) + Railway (Backend) - Recommended
+
+#### Backend Deployment (Railway)
+
+1. **Create Railway Account**
+   - Go to [railway.app](https://railway.app)
+   - Sign up with GitHub
+
+2. **Deploy Backend**
+   - Create new project
+   - Connect your GitHub repository
+   - Set the root directory to `/server`
+   - Add environment variables:
+     ```
+     NODE_ENV=production
+     CLIENT_URL=https://your-frontend-url.vercel.app
+     ```
+
+3. **Get Backend URL**
+   - Railway will provide a URL like: `https://your-app.railway.app`
+
+#### Frontend Deployment (Vercel)
+
+1. **Create Vercel Account**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign up with GitHub
+
+2. **Deploy Frontend**
+   - Import your GitHub repository
+   - Set the root directory to `/client`
+   - Add environment variable:
+     ```
+     REACT_APP_SERVER_URL=https://your-backend-url.railway.app
+     ```
+
+3. **Update Backend CORS**
+   - Go back to Railway and update the `CLIENT_URL` environment variable with your Vercel URL
+
+### Option 2: Netlify (Frontend) + Render (Backend)
+
+#### Backend Deployment (Render)
+
+1. **Create Render Account**
+   - Go to [render.com](https://render.com)
+   - Sign up with GitHub
+
+2. **Deploy Backend**
+   - Create new Web Service
+   - Connect your GitHub repository
+   - Set the root directory to `/server`
+   - Build command: `npm install`
+   - Start command: `npm start`
+   - Add environment variables:
+     ```
+     NODE_ENV=production
+     CLIENT_URL=https://your-frontend-url.netlify.app
+     ```
+
+#### Frontend Deployment (Netlify)
+
+1. **Create Netlify Account**
+   - Go to [netlify.com](https://netlify.com)
+   - Sign up with GitHub
+
+2. **Deploy Frontend**
+   - Import your GitHub repository
+   - Set the root directory to `/client`
+   - Build command: `npm run build`
+   - Publish directory: `build`
+   - Add environment variable:
+     ```
+     REACT_APP_SERVER_URL=https://your-backend-url.onrender.com
+     ```
+
+### Option 3: Heroku (Full Stack)
+
+1. **Create Heroku Account**
+   - Go to [heroku.com](https://heroku.com)
+   - Sign up
+
+2. **Deploy to Heroku**
    ```bash
-   git clone <repository-url>
-   cd intervue
+   # Install Heroku CLI
+   npm install -g heroku
+   
+   # Login to Heroku
+   heroku login
+   
+   # Create Heroku app
+   heroku create your-app-name
+   
+   # Add environment variables
+   heroku config:set NODE_ENV=production
+   heroku config:set CLIENT_URL=https://your-app-name.herokuapp.com
+   
+   # Deploy
+   git push heroku main
    ```
 
-2. **Install all dependencies**
-   ```bash
-   npm run install-all
-   ```
+## Environment Variables
 
-3. **Start the development servers**
-   ```bash
-   npm run dev
-   ```
+### Backend (.env)
+```
+NODE_ENV=production
+CLIENT_URL=https://your-frontend-url.com
+PORT=5001
+```
 
-   This will start both the backend server (port 5000) and the React development server (port 3000).
-
-### Manual Setup
-
-If you prefer to set up manually:
-
-1. **Install root dependencies**
-   ```bash
-   npm install
-   ```
-
-2. **Install server dependencies**
-   ```bash
-   cd server
-   npm install
-   ```
-
-3. **Install client dependencies**
-   ```bash
-   cd ../client
-   npm install
-   ```
-
-4. **Start the servers**
-   ```bash
-   # Terminal 1 - Start backend
-   cd server
-   npm run dev
-
-   # Terminal 2 - Start frontend
-   cd client
-   npm start
-   ```
-
-## Usage
-
-### For Teachers
-1. Open the application in your browser
-2. Select "I'm a Teacher" role
-3. Create polls with questions and multiple choice options
-4. Set time limits and mark correct answers
-5. Monitor live results and chat with students
-6. Use the "Kick out" feature to remove disruptive students
-7. View poll history to analyze past sessions
-
-### For Students
-1. Open the application in your browser
-2. Select "I'm a Student" role
-3. Enter your name (unique per tab)
-4. Wait for the teacher to create a poll
-5. Answer questions within the time limit
-6. View live results after submitting
-7. Chat with teachers and other students
+### Frontend (.env.production)
+```
+REACT_APP_SERVER_URL=https://your-backend-url.com
+```
 
 ## Project Structure
 
@@ -123,8 +179,8 @@ intervue/
 │   │   ├── App.js         # Main app component
 │   │   └── index.js       # Entry point
 │   └── package.json
-├── server/                 # Express.js backend
-│   ├── index.js           # Main server file
+├── server/                 # Node.js backend
+│   ├── index.js           # Server entry point
 │   └── package.json
 ├── package.json           # Root package.json
 └── README.md
@@ -134,92 +190,41 @@ intervue/
 
 - `GET /api/poll-history` - Get poll history
 - `GET /api/participants` - Get current participants
+- `GET /*` - Serve React app
 
 ## Socket.IO Events
 
 ### Client to Server
-- `select-role` - Join as teacher or student
-- `create-poll` - Create a new poll (teacher only)
-- `submit-answer` - Submit answer to poll (student only)
+- `select-role` - Select user role (teacher/student)
+- `create-poll` - Create new poll (teacher only)
+- `submit-answer` - Submit poll answer (student only)
 - `send-message` - Send chat message
-- `kick-student` - Kick out a student (teacher only)
+- `kick-student` - Kick student (teacher only)
+- `clear-active-poll` - Clear active poll (teacher only)
 
 ### Server to Client
-- `current-state` - Send current app state to new user
-- `new-poll` - Notify about new poll
-- `poll-results-updated` - Update poll results
-- `poll-ended` - Notify poll completion
-- `new-message` - New chat message
+- `current-state` - Send current app state
+- `new-poll` - New poll created
+- `poll-results-updated` - Poll results updated
+- `poll-ended` - Poll completed
 - `participant-joined` - New participant joined
 - `participant-updated` - Participant list updated
-- `kicked-out` - Student has been kicked out
-- `error` - Error message
-
-## Deployment
-
-### Production Build
-```bash
-# Build the React app
-cd client
-npm run build
-
-# Start production server
-cd ../server
-npm start
-```
-
-### Environment Variables
-Create a `.env` file in the server directory:
-```
-PORT=5000
-NODE_ENV=production
-```
-
-## Features Implemented
-
-### Must-Haves ✅
-- [x] Functional system
-- [x] Teacher can ask polls
-- [x] Students can answer polls
-- [x] Both can view poll results
-- [x] Full solution with website + backend
-
-### Good-to-Haves ✅
-- [x] Teacher can configure maximum time for polls
-- [x] Teacher can kick students out
-- [x] Website is properly designed
-
-### Brownie Points ✅
-- [x] Chat popup for students and teachers
-- [x] Teacher can view past poll results (not from localStorage)
-
-## Design Features
-
-- **Color Scheme**: Purple gradient theme (#4F0DCE, #5767D0, #7765DA)
-- **Typography**: Inter font family
-- **Animations**: Smooth transitions and hover effects
-- **Responsive**: Mobile-first design approach
-- **Accessibility**: Proper contrast ratios and keyboard navigation
-
-## Browser Support
-
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
+- `new-message` - New chat message
+- `kicked-out` - Student kicked out
+- `active-poll-cleared` - Active poll cleared
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
-For support or questions, please open an issue in the repository. 
+If you encounter any issues or have questions, please open an issue on GitHub. 

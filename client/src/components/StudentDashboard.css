@@ -1,11 +1,13 @@
 .student-dashboard {
-  width: 100%;
-  max-width: 1200px;
+  width: 80%;
+  max-width: 1400px;
   min-height: 100vh;
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin: 0 auto;
+  align-self: center;
 }
 
 /* Dashboard Header */
@@ -48,6 +50,52 @@
   font-size: 16px;
   font-weight: 600;
   color: #373737;
+}
+
+.change-name-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-left: 8px;
+}
+
+.change-name-btn:hover {
+  background: rgba(79, 13, 206, 0.1);
+  transform: scale(1.1);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4F0DCE 0%, #5767D0 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.history-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(79, 13, 206, 0.3);
+}
+
+.btn-icon {
+  font-size: 16px;
 }
 
 /* Dashboard Content */
@@ -128,6 +176,10 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+  .student-dashboard {
+    width: 90%;
+  }
+  
   .dashboard-content {
     flex-direction: column;
   }
@@ -141,6 +193,7 @@
 
 @media (max-width: 768px) {
   .student-dashboard {
+    width: 95%;
     border-radius: 0;
     min-height: 100vh;
   }

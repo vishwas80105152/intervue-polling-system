@@ -260,4 +260,53 @@
   .percentage-text {
     font-size: 11px;
   }
+}
+
+/* Participation Summary */
+.participation-summary {
+  margin-top: 15px;
+  padding: 12px;
+  background: #e8f5e8;
+  border-radius: 8px;
+  border: 1px solid #d4edda;
+}
+
+.summary-text {
+  font-size: 14px;
+  color: #155724;
+  margin: 0;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Student Participants */
+.student-participants {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f0f8ff;
+  border-radius: 8px;
+  border: 1px solid #e3f2fd;
+}
+
+.participants-label {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.student-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.student-name-badge {
+  background: #4f0dce;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
 } 

@@ -28,7 +28,7 @@ const PollHistory = ({ history, onClose }) => {
         <div className="empty-history">
           <span className="empty-icon">📊</span>
           <h4>No polls yet</h4>
-          <p>Poll history will appear here once you create and complete polls.</p>
+          <p>Poll history will appear here once you participate in and complete polls.</p>
         </div>
       </div>
     );

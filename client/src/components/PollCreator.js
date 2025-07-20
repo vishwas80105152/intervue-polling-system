@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './PollCreator.css';
 
-const PollCreator = ({ socket, canCreate }) => {
+const PollCreator = ({ socket, canCreate, pollStatus }) => {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctAnswers, setCorrectAnswers] = useState([false, false, false, false]);
@@ -68,7 +68,27 @@ const PollCreator = ({ socket, canCreate }) => {
         <div className="waiting-message">
           <div className="loading-spinner"></div>
           <h2>Please wait for the current poll to complete</h2>
-          <p>You can create a new poll once all students have answered or the time runs out.</p>
+          {pollStatus && pollStatus.activePoll && (
+            <div className="poll-status-info">
+              <p><strong>Current Status:</strong></p>
+              <p>• {pollStatus.answeredStudents}/{pollStatus.totalStudents} students have answered</p>
+              <p>• {pollStatus.totalStudents - pollStatus.answeredStudents} students still need to answer</p>
+              {pollStatus.studentNames && pollStatus.studentNames.length > 0 && (
+                <div className="answered-students">
+                  <p><strong>Students who answered:</strong></p>
+                  <div className="student-name-list">
+                    {pollStatus.studentNames.map((name, index) => (
+                      <span key={index} className="student-name-tag">{name}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <p>• You can create a new poll once all students answer or the time runs out</p>
+            </div>
+          )}
+          {!pollStatus && (
+            <p>You can create a new poll once all students have answered or the time runs out.</p>
+          )}
         </div>
       </div>
     );

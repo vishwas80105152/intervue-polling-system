@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import WelcomeScreen from './components/WelcomeScreen';
-import StudentSetup from './components/StudentSetup';
 import TeacherDashboard from './components/TeacherDashboard';
 import StudentDashboard from './components/StudentDashboard';
+import StudentSetup from './components/StudentSetup';
 import KickedOutScreen from './components/KickedOutScreen';
 import './App.css';
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5001';
+// Use environment variable for server URL or default to localhost
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:5001';
 
 function App() {
   const [socket, setSocket] = useState(null);
-  const [currentScreen, setCurrentScreen] = useState('welcome');
+  const [currentView, setCurrentView] = useState('welcome');
   const [userRole, setUserRole] = useState(null);
   const [userName, setUserName] = useState('');
-  const [tabId, setTabId] = useState('');
   const [activePoll, setActivePoll] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
   const [pollHistory, setPollHistory] = useState([]);
-  const [error, setError] = useState('');
+  const [tabId, setTabId] = useState('');
 
-  // Generate unique tab ID
+  // Generate unique tab ID on component mount
   useEffect(() => {
-    const storedTabId = localStorage.getItem('intervue_tab_id');
-    if (storedTabId) {
-      setTabId(storedTabId);
-    } else {
-      const newTabId = Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('intervue_tab_id', newTabId);
-      setTabId(newTabId);
+    let storedTabId = localStorage.getItem('tabId');
+    if (!storedTabId) {
+      storedTabId = Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('tabId', storedTabId);
     }
+    setTabId(storedTabId);
   }, []);
 
   // Initialize socket connection
   useEffect(() => {
-    const newSocket = io(SOCKET_URL);
+    const newSocket = io(SERVER_URL);
     setSocket(newSocket);
 
     return () => {
@@ -55,7 +53,7 @@ function App() {
 
     socket.on('new-poll', (poll) => {
       setActivePoll(poll);
-      setCurrentScreen(userRole === 'student' ? 'student-dashboard' : 'teacher-dashboard');
+      setCurrentView(userRole === 'student' ? 'student-dashboard' : 'teacher-dashboard');
     });
 
     socket.on('poll-results-updated', (data) => {
@@ -83,12 +81,14 @@ function App() {
     });
 
     socket.on('kicked-out', () => {
-      setCurrentScreen('kicked-out');
+      setCurrentView('kicked-out');
     });
 
     socket.on('error', (errorMessage) => {
-      setError(errorMessage);
-      setTimeout(() => setError(''), 5000);
+      // setError(errorMessage); // This line was removed from the new_code, so it's removed here.
+      setTimeout(() => {
+        // setError(''); // This line was removed from the new_code, so it's removed here.
+      }, 5000);
     });
 
     return () => {
@@ -107,7 +107,7 @@ function App() {
 
   // Load poll history
   useEffect(() => {
-    if (userRole === 'teacher') {
+    if (userRole === 'teacher' || userRole === 'student') {
       fetch('/api/poll-history')
         .then(res => res.json())
         .then(data => setPollHistory(data))
@@ -118,16 +118,28 @@ function App() {
   const handleRoleSelection = (role) => {
     setUserRole(role);
     if (role === 'teacher') {
-      setCurrentScreen('teacher-dashboard');
+      setCurrentView('teacher-dashboard');
       socket.emit('select-role', { role, tabId });
     } else {
-      setCurrentScreen('student-setup');
+      // Check if student name already exists for this tab
+      const storedStudentName = localStorage.getItem(`intervue_student_name_${tabId}`);
+      if (storedStudentName) {
+        // Use existing name and go directly to student dashboard
+        setUserName(storedStudentName);
+        setCurrentView('student-dashboard');
+        socket.emit('select-role', { role: 'student', name: storedStudentName, tabId });
+      } else {
+        // Show student setup to get name
+        setCurrentView('student-setup');
+      }
     }
   };
 
   const handleStudentSetup = (name) => {
     setUserName(name);
-    setCurrentScreen('student-dashboard');
+    // Store student name for this specific tab
+    localStorage.setItem(`intervue_student_name_${tabId}`, name);
+    setCurrentView('student-dashboard');
     socket.emit('select-role', { role: 'student', name, tabId });
   };
 
@@ -143,13 +155,20 @@ function App() {
     }
   };
 
+  const handleChangeName = () => {
+    // Clear the stored name and go back to student setup
+    localStorage.removeItem(`intervue_student_name_${tabId}`);
+    setUserName('');
+    setCurrentView('student-setup');
+  };
+
   const renderScreen = () => {
-    switch (currentScreen) {
+    switch (currentView) {
       case 'welcome':
         return <WelcomeScreen onRoleSelect={handleRoleSelection} />;
       
       case 'student-setup':
-        return <StudentSetup onSubmit={handleStudentSetup} />;
+        return <StudentSetup onSubmit={handleStudentSetup} isReturning={!!userName} />;
       
       case 'teacher-dashboard':
         return (
@@ -173,6 +192,8 @@ function App() {
             chatMessages={chatMessages}
             userName={userName}
             onSendMessage={handleSendMessage}
+            onChangeName={handleChangeName}
+            pollHistory={pollHistory}
           />
         );
       
@@ -186,11 +207,11 @@ function App() {
 
   return (
     <div className="App">
-      {error && (
+      {/* {error && ( // This line was removed from the new_code, so it's removed here.
         <div className="error-toast">
           {error}
         </div>
-      )}
+      )} */}
       {renderScreen()}
     </div>
   );

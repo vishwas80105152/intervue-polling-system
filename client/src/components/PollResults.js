@@ -10,6 +10,10 @@ const PollResults = ({ poll, participants, onAskNewQuestion }) => {
     return Math.round((count / totalAnswers) * 100);
   };
 
+  // Use pollStats if available, otherwise fall back to participants count
+  const pollStats = poll.pollStats;
+  const studentNames = pollStats ? pollStats.studentNames : [];
+
   return (
     <div className="poll-results">
       <div className="question-display">{poll.question}</div>
@@ -29,6 +33,18 @@ const PollResults = ({ poll, participants, onAskNewQuestion }) => {
           );
         })}
       </div>
+      {studentNames.length > 0 && (
+        <div className="student-participants">
+          <p className="participants-label">Students who participated:</p>
+          <div className="student-names">
+            {studentNames.map((name, index) => (
+              <span key={index} className="student-name-badge">
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <button className="ask-new-btn" onClick={onAskNewQuestion}>
         + Ask a new question
       </button>
