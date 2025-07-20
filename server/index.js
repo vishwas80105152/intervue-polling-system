@@ -3,6 +3,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -22,10 +23,35 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
+// File path for storing poll history
+const HISTORY_FILE = path.join(__dirname, 'poll_history.json');
+
+// Helper function to load poll history from file
+const loadPollHistory = () => {
+  try {
+    if (fs.existsSync(HISTORY_FILE)) {
+      const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error loading poll history:', error);
+  }
+  return [];
+};
+
+// Helper function to save poll history to file
+const savePollHistory = (history) => {
+  try {
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+  } catch (error) {
+    console.error('Error saving poll history:', error);
+  }
+};
+
 // Store active polls, participants, and chat messages
 let activePoll = null;
 let participants = new Map(); // socketId -> { name, role, tabId }
-let pollHistory = [];
+let pollHistory = loadPollHistory(); // Load from file on startup
 let chatMessages = [];
 let questionCounter = 0;
 
@@ -155,6 +181,7 @@ io.on('connection', (socket) => {
             participants: Array.from(participants.values()),
             pollStats
           });
+          savePollHistory(pollHistory); // Save history after each poll ends
         }
       }, activePoll.maxTime * 1000);
     }
@@ -198,6 +225,7 @@ io.on('connection', (socket) => {
           participants: Array.from(participants.values()),
           pollStats
         });
+        savePollHistory(pollHistory); // Save history after each poll ends
       }
     }
   });
@@ -320,4 +348,5 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
   console.log(`Socket.IO server ready for connections`);
   console.log(`Client URL: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
+  console.log(`Loaded ${pollHistory.length} polls from history`);
 }); 
